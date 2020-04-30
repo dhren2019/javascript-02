@@ -135,5 +135,3 @@ const autos = [
 // reduce
 
 // some
-
-
