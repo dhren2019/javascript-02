@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //asignar la BBDD
         Db = crearDB.result;
         // // console.log(Db);
+        mostrarCitas();
     }
 
     //este metodo solo corre una vez y es ideal para crear el schema
@@ -77,9 +78,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         transaction.oncomplete = () => {
             console.log('Cita agregada');
+            mostrarCitas();
         }
         transaction.onerror = () => {
             console.log('hubo un error');
         }
     }
+    function mostrarCitas() {
+        //limpiar las citas anteriores
+        while (citas.firstChild) {
+            citas.removeChild(citas.firstChild);
+
+        }
+        //creamos un objectstore
+        let objectStore = Db.transaction('citas').objectStore('citas');
+
+
+        //devuelve una peticion
+        objectStore.openCursor().onsuccess = function (e) {
+            //cursor se va ha ubicar en el registro indicado para acceder a los datos
+            let cursor =  e.target.result;
+
+            if (cursor) {
+                let citaHTML = document.createElement('li');
+                citaHTML.setAttribute('data-cita-id', cursor.value.key);
+                citaHTML.classList.add ('list-group-item');
+
+                citaHTML.innerHTML = `
+                    <p class = "font-weight-bold">Mascota: <span class = "font-weight-normal">${cursor.value.mascota}</span></p>
+                    <p class = "font-weight-bold">cliente: <span class = "font-weight-normal">${cursor.value.cliente}</span></p>
+                    <p class = "font-weight-bold">Teléfono: <span class = "font-weight-normal">${cursor.value.telefono}</span></p>
+                    <p class = "font-weight-bold">Fecha: <span class = "font-weight-normal">${cursor.value.fecha}</span></p>
+                    <p class = "font-weight-bold">Hora: <span class = "font-weight-normal">${cursor.value.hora}</span></p>
+                    
+                    <div class="card" style="width: 18rem;">
+                  
+                    <div class="card-body">
+                        <h5 class="font-weight-normal">Síntomas:</h5>
+                        <p class="font-weight-normal">${cursor.value.sintomas}</a>
+                    </div>
+                    </div><br>
+                `;
+                //boton de borrar
+                const btnBorrar = document.createElement('button');
+                btnBorrar.classList.add('borrar', 'btn', 'btn-danger');
+                btnBorrar.innerHTML = '<span aria-hidden = "true">X</span> Borrar';
+                btnBorrar.onclick = borrarCita;
+                citaHTML.appendChild(btnBorrar);
+                //append en el padre 
+                citas.appendChild(citaHTML);
+                //consultar los proximos registros
+                cursor.continue();
+            } else {
+                if (!citas.firstChild) {
+                    //cuando no hay registros
+                headingAdministra.textContent = ' Agrega citas para comenzar';
+                let listado = document.createElement('p');
+                listado.classList.add ('text-center');
+                listado.textContent = 'No hay registros';
+                citas.appendChild(listado);
+                } else {
+                    headingAdministra.textContent = 'Administra tus citas';
+                     }
+                }
+             }
+
+       }
+       function borrarCita (e) {
+           let citaId = Number (e.target.parentElement.getAttribute('data-cita-id'));
+
+           
+        //en indexDb se utilizan las transacciones
+        let transaction = Db.transaction( ['citas'], 'readwrite');
+        let objectStore = transaction.objectStore('citas');
+        let peticion    = objectStore.delete(citaId);
+
+        transaction.oncomplete = () => {
+            e.target.parentElement.parentElement.removeChild( e.target.parentElement);
+                console.log('Se eliminó correctamente');
+            if (!citas.firstChild) {
+                //cuando no hay registros
+            headingAdministra.textContent = ' Agrega citas para comenzar';
+            let listado = document.createElement('p');
+            listado.classList.add ('text-center');
+            listado.textContent = 'No hay registros';
+            citas.appendChild(listado);
+            } else {
+                headingAdministra.textContent = 'Administra tus citas';
+                 }
+            }
+         }
+        
 })
