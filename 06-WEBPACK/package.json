@@ -1,0 +1,15 @@
+{
+  "name": "06-webpack",
+  "version": "1.0.0",
+  "description": "Archivo paraaprender webpack",
+  "main": "index.js",
+  "scripts": {
+    "ejecutar": "webpack --mode development"
+  },
+  "author": "Dhren",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
