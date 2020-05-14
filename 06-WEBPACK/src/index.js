@@ -1,2 +1,10 @@
-const carrito = [' Producto 1', ' Producto 2', ' Producto 3'];
-console.log(carrito);
+import ' .../css/style.css';
+
+class Cliente {
+    constructor ( nombre) {
+        this.nombre = nombre;
+    }
+}
+
+const cliente = new Cliente('Juan');
+console.log(cliente);
