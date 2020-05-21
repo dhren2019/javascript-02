@@ -11,6 +11,45 @@ const getUsuario = async ( id ) => {
         return data;
 }
 
-export{
-    getUsuario
+const crearUsuario = async ( usuario ) => {
+
+    const resp = await fetch( urlCrud, {
+        method : 'POST',
+        body: JSON.stringify( usuario ),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    } );
+
+
+    return await resp.json();
 }
+
+const actualizarUsuario = async ( id, usuario ) => {
+
+    const resp = await fetch( `${ urlCrud }/ ${ id }`, {
+        method : 'PUT',
+        body: JSON.stringify( usuario ),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    } );
+
+
+    return await resp.json();
+}
+
+const borrarUsuario = async ( id ) => {
+    
+    const resp = await fetch ( `${ urlCrud }/ ${ id } `, {
+        method: 'DELETE'
+    });
+    return ( resp.ok ) ? 'Borrado' : 'No se pudo borrar';
+}
+
+export{
+    getUsuario,
+    crearUsuario,
+    actualizarUsuario,
+    borrarUsuario
+}   
