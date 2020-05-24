@@ -1,55 +1,55 @@
 
+const urlCRUD = 'https://reqres.in/api/users';
 
 
+const getUsuario = async( id ) => {
 
-const urlCrud = 'https://reqres.in/api/users';
-
-const getUsuario = async ( id ) => {
-
-    const resp = fetch ( `${ urlCrud }/${ id }`);
-    const data = await resp.json();
-        return data;
+    const resp = await fetch(`${ urlCRUD }/${ id }`);
+    const { data } = await resp.json();
+    return data;
 }
 
-const crearUsuario = async ( usuario ) => {
+const crearUsuario = async( usuario ) => {
 
-    const resp = await fetch( urlCrud, {
-        method : 'POST',
+    const resp = await fetch( urlCRUD, {
+        method: 'POST',
         body: JSON.stringify( usuario ),
         headers: {
             'Content-Type': 'application/json'
         }
-    } );
-
+    });
 
     return await resp.json();
 }
 
-const actualizarUsuario = async ( id, usuario ) => {
+const actualizarUsuario = async( id, usuario ) => {
 
-    const resp = await fetch( `${ urlCrud }/ ${ id }`, {
-        method : 'PUT',
+    const resp = await fetch( `${ urlCRUD }/${ id }`, {
+        method: 'PUT',
         body: JSON.stringify( usuario ),
         headers: {
             'Content-Type': 'application/json'
         }
-    } );
-
+    });
 
     return await resp.json();
 }
 
-const borrarUsuario = async ( id ) => {
-    
-    const resp = await fetch ( `${ urlCrud }/ ${ id } `, {
+const borrarUsuario = async( id ) => {
+
+    const resp = await fetch(  `${ urlCRUD }/${ id }`, {
         method: 'DELETE'
     });
-    return ( resp.ok ) ? 'Borrado' : 'No se pudo borrar';
+
+    return ( resp.ok ) ? 'Borrado' : 'No se pudo eliminar';
+
 }
 
-export{
+
+
+export {
     getUsuario,
     crearUsuario,
     actualizarUsuario,
     borrarUsuario
-}   
+}
